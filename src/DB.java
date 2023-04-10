@@ -41,6 +41,30 @@ public class DB {
                     }
                 }
                 System.out.println("로그인 실패");
+            } else if (num==3) {
+                String sql="select * from login";
+                ResultSet rs= stmt.executeQuery(sql);
+                while(rs.next()){
+                    System.out.println(rs.getString("id")+"번 유저의 아이디 :"+rs.getString("username")+"\n유저의 비밀번호 :"+rs.getString("password"));
+                }
+                관리자모드.root();
+            } else if (num==4) {
+                BufferedReader bi=new BufferedReader(new InputStreamReader(System.in));
+
+                while (true) {
+                    System.out.println("삭제하실 번호를 알려주세요");
+                    String id=bi.readLine();
+                    String sql = "delete from login where id='"+id+"'";
+                    stmt.executeUpdate(sql);
+                    System.out.println(id+"번 유저가 삭제되었습니다.");
+                    System.out.println("계속 하시겠습니까? y/n");
+                    String c=bi.readLine();
+                    if(c.equals("y")){
+                        continue;
+                    } else if (c.equals("n")) {
+                        view.menu(); //수정
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
