@@ -11,11 +11,20 @@ public class 관리자모드 {
         if (pass==7777){
             System.out.println("1. 회원 아이디 조회");
             System.out.println("2. 회원 삭제");
+            System.out.println("3. 책 추가");
+            System.out.println("4. 책 삭제");
+            System.out.println("5. 각 책의 매출 조회");
+
+
             int num=Integer.parseInt(bi.readLine());
             if(num==1){
                 DB.db_connet(3,null,null);
             } else if (num==2) {
                 DB.db_connet(4,null,null);
+            }else if(num==3){
+                AddandDelBooks.addbooks();
+            }else if(num==4){
+                AddandDelBooks.deletebooks();
             }
         }
     }
