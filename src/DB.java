@@ -10,6 +10,46 @@ public class DB {
     public static String user = "2019011459"; // 데이터베이스 사용자 이름
     public static String password = "2019011459"; // 데이터베이스 비밀번호
 
+
+    public static void bookselect() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(url, user, password);
+            Statement stmt = conn.createStatement();
+            String sql2= "select * from books";
+            ResultSet rs = stmt.executeQuery(sql2);
+            while (rs.next()) {
+                System.out.println(rs.getString("bid") + "번 \n책이름 :" + rs.getString("book") +"\n총 판매금액 : "+rs.getString("totalprice"));
+            }
+
+            System.out.println();
+            관리자모드.관리자Menu();
+        }
+        catch (Exception e){
+            System.out.println("잘못입력하셨습니다.");
+            e.printStackTrace();
+        }
+    }
+    public static void bookAllSelect() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(url, user, password);
+            Statement stmt = conn.createStatement();
+            String sql2= "SELECT SUM(totalprice) AS total_sum\n" +
+                    "FROM books;\n";
+            ResultSet rs = stmt.executeQuery(sql2);
+            rs.next();
+            System.out.println("총매출은 "+rs.getString("total_sum")+ "원 입니다");
+
+            System.out.println();
+            관리자모드.관리자Menu();
+        }
+        catch (Exception e){
+            System.out.println("잘못입력하셨습니다.");
+            e.printStackTrace();
+        }
+    }
+
     public static void bookbuy(int num){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -17,13 +57,16 @@ public class DB {
             Statement stmt = conn.createStatement();
             String sql = "UPDATE books SET amount = amount + 1 where bid='"+num+"'";
             String sql2= "select * from books where bid='"+num+"'";
+            String sql3="UPDATE books\n" + "SET totalprice = price * amount;";
+
             ResultSet rs = stmt.executeQuery(sql2);
+
             while (rs.next()) {
                 System.out.println(Login.user_name + "님 " + rs.getString("book") + "책이 구매되었습니다.");
             }
             stmt.executeUpdate(sql);
             System.out.println();
-
+            stmt.executeUpdate(sql3);
         }
         catch (Exception e){
             System.out.println("잘못입력하셨습니다.");
@@ -110,7 +153,7 @@ public class DB {
             stmt.executeUpdate(sql); //sql문을 날림
             stmt.close();
             conn.close();
-            View.menu(); //다시 메뉴로 되돌아가기
+            관리자모드.관리자Menu(); //다시 메뉴로 되돌아가기
 
         }
         catch (Exception e){
@@ -129,7 +172,7 @@ public class DB {
             stmt.executeUpdate(sql); //sql문을 날림
             stmt.close();
             conn.close();
-            View.menu(); //다시 메뉴로 되돌아가기
+            관리자모드.관리자Menu(); //다시 메뉴로 되돌아가기
 
         }
         catch (Exception e){
@@ -186,7 +229,7 @@ public class DB {
                 while (rs.next()) {
                     System.out.println(rs.getString("id") + "번 유저의 아이디 :" + rs.getString("username") + "\n유저의 비밀번호 :" + rs.getString("password"));
                 }
-                관리자모드.root();
+                관리자모드.관리자Menu();;
             } else if (num == 4) {
                 BufferedReader bi = new BufferedReader(new InputStreamReader(System.in));
 
@@ -201,7 +244,7 @@ public class DB {
                     if (c.equals("y")) {
                         continue;
                     } else if (c.equals("n")) {
-                        View.menu(); //수정
+                        관리자모드.관리자Menu(); //수정
                     }
                 }
             }
@@ -210,5 +253,7 @@ public class DB {
         }
 
     }
+
+
 
 }
